@@ -1,0 +1,223 @@
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2013-10-30 17:48+0100\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.7\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"X-Poedit-SearchPath-0: ..\n"
+
+#: ../404.php:4
+msgid "Not found"
+msgstr "Non trovato"
+
+#: ../404.php:8
+msgid "It looks like nothing was found at this location."
+msgstr "Pare che non via nulla nel posto che stavi cercando."
+
+#: ../archive.php:8
+#, php-format
+msgid "Daily Archives: %s"
+msgstr "Archivi del giorno: %s"
+
+#: ../archive.php:10
+#, php-format
+msgid "Monthly Archives: %s"
+msgstr "Archivi del mese: %s"
+
+#: ../archive.php:10
+msgctxt "monthly archives date format"
+msgid "F Y"
+msgstr "F Y"
+
+#: ../archive.php:12
+#, php-format
+msgid "Yearly Archives: %s"
+msgstr "Archivi annuali: %s"
+
+#: ../archive.php:12
+msgctxt "yearly archives date format"
+msgid "Y"
+msgstr "Y"
+
+#: ../archive.php:14
+msgid "Archives"
+msgstr "Archivi"
+
+#: ../author.php:10
+#, php-format
+msgid "All posts by %s"
+msgstr "Tutti gli articoli di  %s"
+
+#: ../comments.php:41
+msgid "&larr; Older Comments"
+msgstr "&larr; Vecchi commenti"
+
+#: ../comments.php:42
+msgid "Newer Comments &rarr;"
+msgstr "Nuovi commenti &rarr;"
+
+#: ../comments.php:47
+msgid "Comments are closed."
+msgstr "I commenti sono chiusi."
+
+#: ../content-none.php:9
+msgid "Nothing Found"
+msgstr "Nessun risultato"
+
+#: ../content-none.php:16
+#, php-format
+msgid ""
+"Ready to publish your first post? <a href=\"%1$s\">Get started here</a>."
+msgstr ""
+"Sei pronto a pubblicare il tuo primo articolo? <a href=\"%1$s\">Comincia da "
+"qui</a>."
+
+#: ../content-none.php:20
+msgid ""
+"Sorry, but nothing matched your search terms. Please try again with "
+"different keywords."
+msgstr ""
+"Spiacente, nessuna corrispondenza con i termini di ricerca che hai indicato. "
+"Prova con termini diversi."
+
+#: ../content-none.php:24
+msgid "It seems we can&rsquo;t find what you&rsquo;re looking for."
+msgstr "Non riusciamo a trovare quello che cerchi."
+
+#: ../content.php:14
+#, php-format
+msgid "Written by %s"
+msgstr "A cura di %s"
+
+#: ../functions.php:42
+msgid "Main Menu"
+msgstr ""
+
+#: ../functions.php:43
+msgid "Footer Menu"
+msgstr ""
+
+#: ../functions.php:147
+msgid "Site Footer Widget Area"
+msgstr ""
+
+#: ../functions.php:149
+msgid "Appears in the footer section of the site."
+msgstr ""
+
+#: ../functions.php:157
+msgid "Page Footer Widget Area"
+msgstr ""
+
+#: ../functions.php:159
+msgid "Appears in between content and comments on posts and pages."
+msgstr ""
+
+#: ../functions.php:233
+msgid "More on the next page &raquo;"
+msgstr "Leggine ancora &raquo;"
+
+#: ../functions.php:235
+msgid "Previous"
+msgstr "Indietro"
+
+#: ../functions.php:237
+msgid "Next"
+msgstr "Avanti"
+
+#: ../functions.php:239
+msgid "&laquo; Back to beginning"
+msgstr "Torna all'inizio"
+
+#: ../functions.php:397
+msgid "None"
+msgstr ""
+
+#: ../functions.php:422
+msgid "Featured Category"
+msgstr ""
+
+#: ../functions.php:424
+msgid "Choose what category to feature on the home page."
+msgstr ""
+
+#: ../functions.php:427
+msgid "Appearance"
+msgstr ""
+
+#: ../functions.php:429
+msgid "Make it yours."
+msgstr ""
+
+#: ../functions.php:432
+msgid "Typography"
+msgstr ""
+
+#: ../functions.php:434
+msgid "Customize fonts and font sizes."
+msgstr ""
+
+#: ../functions.php:437
+msgid "Display Options"
+msgstr ""
+
+#: ../functions.php:441
+msgid "Webfonts"
+msgstr ""
+
+#: ../functions.php:443
+msgid "Add your webfont embed code."
+msgstr ""
+
+#: ../functions.php:446
+msgid "Custom HTML"
+msgstr ""
+
+#: ../functions.php:458
+msgid "Site Logo"
+msgstr ""
+
+#: ../functions.php:469
+msgid "Favicon"
+msgstr ""
+
+#: ../functions.php:480
+msgid "Fallback Background Image"
+msgstr ""
+
+#: ../functions.php:491
+msgid "Background Color"
+msgstr ""
+
+#: ../functions.php:503
+msgid "Accent Color"
+msgstr ""
+
+#: ../functions.php:643
+msgid "Hide Search Field"
+msgstr ""
+
+#: ../functions.php:654
+msgid "Disable Parallax Effects"
+msgstr ""
+
+#: ../search.php:6
+#, php-format
+msgid "Search Results for: %s"
+msgstr "Risultati ricerca per: %s"
+
+#: ../searchform.php:3 ../searchform.php:4
+msgid "Search for:"
+msgstr ""
+
+#: ../searchform.php:4 ../searchform.php:6
+msgid "Search"
+msgstr "Cerca"
