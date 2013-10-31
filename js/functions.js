@@ -41,6 +41,28 @@ var Deference = {
 
     // Observe scrolling
     this.$win.on('scroll', this.observeScroll.bind(this));
+
+    this.$activeIndexNav = jQuery('.page-header-index .current');
+
+
+    // TODO: Clean this up
+    var $index = jQuery('.page-header-index');
+    if ($index.length > 0) {
+      var firstPos = $index.find(':first').position().left;
+      var lastPos = $index.find(':last').position().left;
+      var middlePos = $index.find('.current').position().left;
+
+      if (lastPos > $index.width()) {
+        if (middlePos > (lastPos - ($index.width() / 2)))
+          jQuery('.page-header-index').css({
+            'left': -((lastPos + jQuery('.page-header-index :last').width()) - $index.width())
+          });
+        else if (middlePos > ($index.width() / 2))
+          jQuery('.page-header-index').css({
+            'left': -(middlePos - ($index.width() / 2) + (this.$activeIndexNav.width() / 2) - 15)
+          });
+      }
+    }
   },
 
   observeScroll: function() {

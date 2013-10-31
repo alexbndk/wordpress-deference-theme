@@ -102,7 +102,8 @@ function deference_custom_styles() {
     }
 
     #site-nav,
-    .page-pagination {
+    .page-pagination,
+    .page-header-index li {
       text-transform: $nav_text_transform;
       letter-spacing: $nav_letter_spacing;
     }
@@ -178,7 +179,7 @@ function deference_modify_query($query) {
 
   if ($query->is_home() && get_theme_mod('featured_category')) {
     $query->set('cat', '-'.get_theme_mod('featured_category'));
-  } elseif ($query->is_category() || ($query->is_home() && !get_theme_mod('featured_category'))) {
+  } elseif (($query->is_archive() && !is_author()) || ($query->is_home() && !get_theme_mod('featured_category'))) {
     $query->set('posts_per_page', get_option('posts_per_page') + 1);
   }
 }
@@ -232,6 +233,22 @@ function deference_excerpt_length($length) {
 }
 add_filter('excerpt_length', 'deference_excerpt_length', 999);
 
+function deference_get_archives_link($link_html) {
+  global $wp;
+  static $current_url;
+  if (empty( $current_url)) {
+    $current_url = add_query_arg($_SERVER['QUERY_STRING'], '', home_url($wp->request));
+  }
+  if (stristr( $current_url, 'page')!== false) {
+    $current_url = substr($current_url, 0, strrpos($current_url, 'page'));
+  }
+  if (stristr($link_html, $current_url) !== false) {
+    $link_html = preg_replace('/(<[^\s>]+)/', '\1 class="current"', $link_html, 1);
+  }
+  return $link_html;
+}
+add_filter('get_archives_link', 'deference_get_archives_link');
+
 if (!function_exists('deference_paging_nav')):
 function deference_paging_nav() {
   global $wp_query;
@@ -246,7 +263,7 @@ function deference_paging_nav() {
       if ($paged == 1):
         next_posts_link(__('More on the next page &raquo;', 'deference'));
       elseif (get_next_posts_link()):
-        previous_posts_link(__('Previous', 'deference'));
+        previous_posts_link(__('Back', 'deference'));
         echo '<span class="page-pagination-divider">/</span>';
         next_posts_link(__('Next', 'deference'));
       else:

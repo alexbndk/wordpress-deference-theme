@@ -67,6 +67,13 @@ a {
   -o-transition: color .2s;
   transition: color .2s;
 }
+  a h1, a h2, a h3, a h4, a h5, a h6 {
+    -webkit-transition: color .2s;
+    -moz-transition: color .2s;
+    -ms-transition: color .2s;
+    -o-transition: color .2s;
+    transition: color .2s;
+  }
 
 hr {
   display: block;
@@ -314,15 +321,45 @@ h6 {
   }
 
 .page-header {
-  padding: 30px;
-  margin-bottom:1px;
+  padding: 20px 30px;
   text-align: center;
-  box-shadow: rgba(255,255,255,.8) 0 1px 0;
   background: #fff;
   background: rgba(255,255,255,.8);
+  background: rgba(0,0,0,.4);
 }
+  .page-header-index {
+    position: relative;
+    width: 100%;
+    margin: -30px -15px;
+    padding: 0;
+    list-style: none;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    letter-spacing: -0.31em;
+  }
+    .page-header-index li {
+      display: inline-block;
+    }
+      .page-header-index li a {
+        display: block;
+        padding: 30px 15px;
+        color: rgba(255,255,255,.5);
+        font-size: 20px;
+        font-size: 1.25rem;
+        font-weight: bold;
+      }
+        .page-header-index li a:hover {
+          color: #fff;
+        }
+      .page-header-index li.current a {
+        color: #fff;
+      }
   .page-title {
     margin: 0;
+    color: rgba(255,255,255,1);
+    font-size: 30px;
+    font-size: 1.75rem;
   }
 .page-section {
   z-index: 2;
