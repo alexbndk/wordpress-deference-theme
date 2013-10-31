@@ -6,9 +6,11 @@
     <footer id="site-footer">
       <p class="footer-divider">◆◆◆</p>
 
-      <nav id="site-footer-nav">
-        <?php wp_nav_menu(array('theme_location' => 'secondary', 'menu_class' => 'site-footer-nav alt-font', 'container' => false)); ?>
-      </nav>
+      <?php if (has_nav_menu('secondary')): ?>
+        <nav id="site-footer-nav">
+          <?php wp_nav_menu(array('theme_location' => 'secondary', 'menu_class' => 'site-footer-nav alt-font', 'container' => false)); ?>
+        </nav>
+      <?php endif; ?>
 
       <p class="footer-copyright">
         &#169; <?php echo date('Y'); ?> <span><?php bloginfo('name'); ?></span>

@@ -1,20 +1,22 @@
 <?php get_header(); ?>
 
-  <?php get_template_part('partials/feature'); ?>
+  <?php if (have_posts()): ?>
 
-  <div class="post-list page-section">
-    <?php
-      // Remove the featured category from the home page loop
-      if (get_theme_mod('featured_category')) {
-        global $query_string;
-        query_posts($query_string . '&cat=-' . get_theme_mod('featured_category'));
-      }
+    <?php get_template_part('partials/feature'); ?>
 
-      get_template_part('partials/loop');
+    <div class="post-list page-section">
+      <?php while(have_posts()): the_post(); ?>
+        <?php get_template_part('content', 'summary'); ?>
+      <?php endwhile; ?>
 
-      wp_reset_query();
-    ?>
-  </div>
+      <?php deference_paging_nav(); ?>
+    </div>
+
+  <?php else: ?>
+
+    <?php get_template_part('content', 'none'); ?>
+
+  <?php endif; ?>
 
   <div class="category-index page-section translucent">
     <?php $categories = get_categories(); ?>

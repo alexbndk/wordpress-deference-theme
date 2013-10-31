@@ -18,12 +18,6 @@
 
   <?php if (get_theme_mod('webfont_embed_code')): ?>
     <?php echo get_theme_mod('webfont_embed_code'); ?>
-  <?php else: ?>
-    <?php $style = deference_get_style(); ?>
-    <?php if ($style->google_fonts): ?>
-      <link href="http://fonts.googleapis.com/css?family=<?php echo urlencode($style['body']); ?>:<?php echo $style['body_variations']; ?>" rel="stylesheet" type="text/css">
-      <link href="http://fonts.googleapis.com/css?family=<?php echo urlencode($style['title']); ?>:<?php echo $style['title_variations']; ?>" rel="stylesheet" type="text/css">
-    <?php endif; ?>
   <?php endif; ?>
 
   <!--[if lt IE 9]>
@@ -53,8 +47,10 @@
       <?php echo deference_get_theme_mod('site_header_html'); ?>
     </header>
 
-    <nav id="site-nav" class="alt-font"<?php echo deference_theme_mod_data_attr('nav_font_size'); ?>>
-      <?php wp_nav_menu(array('theme_location' => 'primary', 'menu_class' => 'site-header-nav', 'container' => false)); ?>
-    </nav>
+    <?php if (has_nav_menu('primary')): ?>
+      <nav id="site-nav" class="alt-font"<?php echo deference_theme_mod_data_attr('nav_font_size'); ?>>
+        <?php wp_nav_menu(array('theme_location' => 'primary', 'menu_class' => 'site-header-nav', 'container' => false)); ?>
+      </nav>
+    <?php endif; ?>
 
     <div id="site-main">

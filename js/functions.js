@@ -1,4 +1,5 @@
 var Deference = {
+  hasMainNav: false,
   hasAdminBar: false,
   supportsGyro: false,
   useParallax: true,
@@ -9,17 +10,19 @@ var Deference = {
     this.$win = jQuery(window);
     this.scrollPos = this.$win.scrollTop();
 
-    this.$navContainer = jQuery('#site-nav');
-    this.$nav = jQuery('.site-header-nav');
-    this.$navItems = this.$nav.find('.menu-item');
-
     // Parallax can be turned off in the theme configuration
     this.useParallax = !this.$body.hasClass('disable-parallax');
     this.hasAdminBar = this.$body.hasClass('admin-bar');
     this.supportsGyro = window.DeviceOrientationEvent;
 
-    // Initialize main nav
-    this.calculateNavOverflow();
+    this.$navContainer = jQuery('#site-nav');
+    this.hasMainNav = this.$navContainer.length > 0;
+    if (this.hasMainNav) {
+      this.$nav = jQuery('.site-header-nav');
+      this.$navItems = this.$nav.find('.menu-item');
+      // Initialize main nav
+      this.calculateNavOverflow();
+    }
 
     this.$cover = jQuery('.post-cover');
     this.$coverImg = this.$cover.find('img');
@@ -44,7 +47,7 @@ var Deference = {
     this.scrollPos = this.$win.scrollTop();
 
     // Fixed nav
-    if (this.scrollPos >= (this.$navContainer.offset().top - (this.hasAdminBar ? 28 : 0))) {
+    if (this.hasMainNav && this.scrollPos >= (this.$navContainer.offset().top - (this.hasAdminBar ? 28 : 0))) {
       this.$navContainer.addClass('fixed');
     } else {
       this.$navContainer.removeClass('fixed');

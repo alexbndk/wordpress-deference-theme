@@ -2,7 +2,7 @@
 
 // Provide automatic updates
 require_once('wp-updates-theme.php');
-new WPUpdatesThemeUpdater_454( 'http://wp-updates.com/api/2/theme', basename(get_template_directory()));
+new WPUpdatesThemeUpdater_454('http://wp-updates.com/api/2/theme', basename(get_template_directory()));
 
 // Set content width based on the theme settings
 if (!isset( $content_width))
@@ -58,15 +58,15 @@ function deference_scripts_styles() {
 add_action('wp_enqueue_scripts', 'deference_scripts_styles');
 
 function deference_custom_styles() {
-  $background_color = get_theme_mod('background_color', '#fff');
+  $background_color = get_theme_mod('background_color', '#eee');
   $background_color = (strpos($background_color, '#') !== false ? $background_color : "#$background_color");
-  $body_fonts = (isset($style) ? $style['body'] : get_theme_mod('webfont_body_font_stack'));
-  $title_fonts = (isset($style) ? $style['title'] : get_theme_mod('webfont_title_font_stack'));
+  $body_fonts = get_theme_mod('body_font_stack', 'Georgia, serif');
+  $title_fonts = get_theme_mod('title_font_stack', '"Helvetica Neue", Helvetica, Arial, sans-serif');
   $font_size = get_theme_mod('font_size', '100');
   $nav_text_transform = get_theme_mod('nav_text_transform', 'none');
   $nav_letter_spacing = get_theme_mod('nav_letter_spacing', '0');
-  $category_text_transform = get_theme_mod('category_text_transform', 'none');
-  $category_letter_spacing = get_theme_mod('category_letter_spacing', '0');
+  $category_text_transform = get_theme_mod('category_text_transform', 'uppercase');
+  $category_letter_spacing = get_theme_mod('category_letter_spacing', '0.1em');
   $accent_color = get_theme_mod('accent_color', '#E44B4B');
   $accent_color = (strpos($accent_color, '#') !== false ? $accent_color : "#$accent_color");
   $layout_width = get_theme_mod('layout_width', '980px');
@@ -123,7 +123,8 @@ function deference_custom_styles() {
     .page-pagination a,
     .post a,
     .comment .comment-author a:hover,
-    .comment-form .required {
+    .comment-form .required,
+    .widget a {
       color: $accent_color;
     }
 
@@ -156,8 +157,8 @@ function deference_widgets_init() {
     'description'   => __( 'Appears in the footer section of the site.', 'deference' ),
     'before_widget' => '<div id="%1$s" class="widget %2$s">',
     'after_widget'  => '</div>',
-    'before_title'  => '<h3 class="widget-title">',
-    'after_title'   => '</h3>',
+    'before_title'  => '<h5 class="widget-title">',
+    'after_title'   => '</h5>',
   ) );
 
   register_sidebar( array(
@@ -166,11 +167,22 @@ function deference_widgets_init() {
     'description'   => __( 'Appears in between content and comments on posts and pages.', 'deference' ),
     'before_widget' => '<div id="%1$s" class="widget %2$s">',
     'after_widget'  => '</div>',
-    'before_title'  => '<h3 class="widget-title">',
-    'after_title'   => '</h3>',
+    'before_title'  => '<h5 class="widget-title">',
+    'after_title'   => '</h5>',
   ) );
 }
-add_action( 'widgets_init', 'deference_widgets_init' );
+add_action('widgets_init', 'deference_widgets_init');
+
+function deference_modify_query($query) {
+  if (is_admin() || !$query->is_main_query()) return;
+
+  if ($query->is_home() && get_theme_mod('featured_category')) {
+    $query->set('cat', '-'.get_theme_mod('featured_category'));
+  } elseif ($query->is_category() || ($query->is_home() && !get_theme_mod('featured_category'))) {
+    $query->set('posts_per_page', get_option('posts_per_page') + 1);
+  }
+}
+add_action('pre_get_posts', 'deference_modify_query', 1);
 
 function deference_wp_title( $title, $sep ) {
   global $paged, $page;
@@ -225,7 +237,7 @@ function deference_paging_nav() {
   global $wp_query;
 
   // Don't print empty markup if there's only one page.
-  if ( $wp_query->max_num_pages < 2 )
+  if ($wp_query->max_num_pages < 2)
     return;
   ?>
   <nav class="page-pagination alt-font" role="navigation">
@@ -308,10 +320,13 @@ function deference_get_post_thumbnail_with_fallback($size = 'large') {
   $image_url = '';
   if (has_post_thumbnail()) {
     $image_id = get_post_thumbnail_id();
+  } elseif (is_attachment() && wp_attachment_is_image()) {
+    $image_id = get_the_ID();
   } else {
     $args = array(
       'numberposts' => 1,
       'order' => 'ASC',
+      'orderby' => 'menu_order ID',
       'post_parent' => get_the_ID(),
       'post_type' => 'attachment',
       'post_mime_type' => 'image',
@@ -425,29 +440,29 @@ function deference_customize_register($wp_customize) {
   $wp_customize->add_section('deference_home_page', array(
     'title'    => __('Featured Category', 'deference'),
     'priority' => 0,
-    'description' => __('Choose what category to feature on the home page.'),
+    'description' => __('Choose what category to feature on the home page. The latest post from the selected category is shown in the featured block and will not appear in the list of posts below it.', 'deference'),
   ));
   $wp_customize->add_section('deference_appearance', array(
     'title'    => __('Appearance', 'deference'),
     'priority' => 1,
-    'description' => __('Make it yours.'),
+    'description' => __('Customize the look and feel.', 'deference'),
   ));
   $wp_customize->add_section('deference_typography', array(
     'title'    => __('Typography', 'deference'),
     'priority' => 2,
     'description' => __('Customize fonts and font sizes.', 'deference'),
   ));
+  $wp_customize->add_section('deference_webfonts', array(
+    'title'    => __('Webfonts', 'deference'),
+    'priority' => 3,
+    'description' => __('Optionally add the embed code from your webfont provider, e.g. Google Fonts or Typekit.', 'deference'),
+  ));
   $wp_customize->add_section('deference_display_options', array(
     'title'    => __('Display Options', 'deference'),
     'priority' => 4,
   ));
-  $wp_customize->add_section('deference_webfonts', array(
-    'title'    => __('Webfonts', 'deference'),
-    'priority' => 5,
-    'description' => __('Add your webfont embed code.', 'deference'),
-  ));
   $wp_customize->add_section('deference_custom_html', array(
-    'title'    => __('Custom HTML', 'deference'),
+    'title'    => __('Insert HTML', 'deference'),
     'priority' => 5,
   ));
 
@@ -487,7 +502,7 @@ function deference_customize_register($wp_customize) {
   )));
 
   $wp_customize->add_setting('background_color', array(
-    'default'           => '#ffffff',
+    'default'           => '#eeeeee',
     'capability'        => 'edit_theme_options',
     'transport'         => 'postMessage',
   ));
@@ -509,25 +524,6 @@ function deference_customize_register($wp_customize) {
     'settings' => 'accent_color',
   )));
 
-  $wp_customize->add_setting('style', array(
-    'default'        => 'modern',
-    'capability'     => 'edit_theme_options',
-  ));
-  $wp_customize->add_control('style', array(
-    'label'   => 'Style:',
-    'section' => 'deference_appearance',
-    'type'    => 'select',
-    'choices'    => array(
-      'modern'  => 'Modern',
-      'elegant' => 'Elegant',
-      'techy'   => 'Techy',
-      'spartan' => 'Spartan',
-      'retro'   => 'Retro',
-      'classic' => 'Classic',
-    ),
-  ));
-
-
   // Appearance Options
   $wp_customize->add_setting('layout_width', array(
     'default'        => '980px',
@@ -535,7 +531,7 @@ function deference_customize_register($wp_customize) {
     'transport'      => 'postMessage',
   ));
   $wp_customize->add_control('layout_width', array(
-    'label'   => 'Layout Width:',
+    'label'   => __('Layout Width', 'deference'),
     'section' => 'deference_appearance',
     'type'    => 'text',
   ));
@@ -546,7 +542,7 @@ function deference_customize_register($wp_customize) {
     'transport'      => 'postMessage',
   ));
   $wp_customize->add_control('post_cover_height', array(
-    'label'   => 'Post Cover Image Height:',
+    'label'   => __('Post Cover Image Height', 'deference'),
     'section' => 'deference_appearance',
     'type'    => 'text',
   ));
@@ -558,7 +554,7 @@ function deference_customize_register($wp_customize) {
     'transport'      => 'postMessage',
   ));
   $wp_customize->add_control('font_size', array(
-    'label'   => 'Font Size:',
+    'label'   => __('Font Size', 'deference'),
     'section' => 'deference_typography',
     'type'    => 'select',
     'choices'    => array(
@@ -580,7 +576,7 @@ function deference_customize_register($wp_customize) {
     'transport'      => 'postMessage',
   ));
   $wp_customize->add_control('nav_font_size', array(
-    'label'   => 'Navigation Font Size:',
+    'label'   => __('Navigation Font Size', 'deference'),
     'section' => 'deference_typography',
     'type'    => 'text',
   ));
@@ -591,17 +587,17 @@ function deference_customize_register($wp_customize) {
     'transport'      => 'postMessage',
   ));
   $wp_customize->add_control('nav_letter_spacing', array(
-    'label'   => 'Nav Letter Spacing:',
+    'label'   => __('Navigation Letter Spacing', 'deference'),
     'section' => 'deference_typography',
     'type'    => 'text',
   ));
 
   $wp_customize->add_setting('nav_text_transform', array(
+    'default'    => 'none',
     'capability' => 'edit_theme_options',
-    'transport'  => 'postMessage',
   ));
   $wp_customize->add_control('nav_text_transform', array(
-    'label'   => __('Nav Text Transform', 'deference'),
+    'label'   => __('Navigation Text Transform', 'deference'),
     'section' => 'deference_typography',
     'type'    => 'select',
     'choices'    => array(
@@ -613,8 +609,8 @@ function deference_customize_register($wp_customize) {
   ));
 
   $wp_customize->add_setting('category_text_transform', array(
+    'default'    => 'uppercase',
     'capability' => 'edit_theme_options',
-    'transport'  => 'postMessage',
   ));
   $wp_customize->add_control('category_text_transform', array(
     'label'   => __('Category Text Transform', 'deference'),
@@ -629,12 +625,12 @@ function deference_customize_register($wp_customize) {
   ));
 
   $wp_customize->add_setting('category_letter_spacing', array(
-    'default'        => '0',
+    'default'        => '.1em',
     'capability'     => 'edit_theme_options',
     'transport'      => 'postMessage',
   ));
   $wp_customize->add_control('category_letter_spacing', array(
-    'label'   => 'Category Letter Spacing:',
+    'label'   => __('Category Letter Spacing', 'deference'),
     'section' => 'deference_typography',
     'type'    => 'text',
   ));
@@ -644,28 +640,28 @@ function deference_customize_register($wp_customize) {
     'capability'     => 'edit_theme_options',
   ));
   $wp_customize->add_control(new Magazine_Customize_Textarea_Control($wp_customize, 'webfont_embed_code', array(
-    'label'   => 'Embed Code',
+    'label'   => __('Embed Code', 'deference'),
     'section' => 'deference_webfonts',
     'settings'   => 'webfont_embed_code',
   )));
 
-  $wp_customize->add_setting('webfont_title_font_stack', array(
-    'default'        => '',
+  $wp_customize->add_setting('title_font_stack', array(
+    'default'        => '"Helvetica Neue", Helvetica, Arial, sans-serif',
     'capability'     => 'edit_theme_options',
   ));
-  $wp_customize->add_control('webfont_title_font_stack', array(
-    'label'   => 'Title Font Stack:',
-    'section' => 'deference_webfonts',
+  $wp_customize->add_control('title_font_stack', array(
+    'label'   => __('Title Font Stack', 'deference'),
+    'section' => 'deference_typography',
     'type'    => 'text',
   ));
 
-  $wp_customize->add_setting('webfont_body_font_stack', array(
-    'default'        => '',
+  $wp_customize->add_setting('body_font_stack', array(
+    'default'        => 'Georgia, serif',
     'capability'     => 'edit_theme_options',
   ));
-  $wp_customize->add_control('webfont_body_font_stack', array(
-    'label'   => 'Body Font Stack:',
-    'section' => 'deference_webfonts',
+  $wp_customize->add_control('body_font_stack', array(
+    'label'   => __('Body Font Stack', 'deference'),
+    'section' => 'deference_typography',
     'type'    => 'text',
   ));
 
@@ -675,7 +671,7 @@ function deference_customize_register($wp_customize) {
     'capability'        => 'edit_theme_options',
   ));
   $wp_customize->add_control(new Category_Dropdown_Customize_Control($wp_customize, 'featured_category', array(
-    'label'   => 'Featured Category',
+    'label'   => __('Featured Category', 'deference'),
     'section' => 'deference_home_page',
     'settings'   => 'featured_category',
   )));
@@ -687,10 +683,20 @@ function deference_customize_register($wp_customize) {
     'transport'         => 'postMessage',
   ));
   $wp_customize->add_control(new Magazine_Customize_Textarea_Control($wp_customize, 'footer_text', array(
-    'label'   => 'Footer Text',
-    'section' => 'deference_custom_html',
+    'label'   => __('Footer Text', 'deference'),
+    'section' => 'deference_display_options',
     'settings'   => 'footer_text',
   )));
+
+  // Hide author info
+  $wp_customize->add_setting('hide_author', array(
+    'capability' => 'edit_theme_options',
+  ));
+  $wp_customize->add_control('hide_author', array(
+    'label'    => __('Hide Author Information', 'deference'),
+    'section'  => 'deference_display_options',
+    'type'     => 'checkbox',
+  ));
 
   // Hide search field
   $wp_customize->add_setting('hide_search_field', array(
@@ -703,7 +709,7 @@ function deference_customize_register($wp_customize) {
     'type'     => 'checkbox',
   ));
 
-  // Disable parallax for desktop
+  // Disable parallax
   $wp_customize->add_setting('disable_parallax', array(
     'capability' => 'edit_theme_options',
     'transport'  => 'postMessage',
@@ -721,7 +727,7 @@ function deference_customize_register($wp_customize) {
     'transport'         => 'postMessage',
   ));
   $wp_customize->add_control(new Magazine_Customize_Textarea_Control($wp_customize, 'site_header_html', array(
-    'label'   => 'Custom Header HTML',
+    'label'   => __('Custom Header HTML', 'deference'),
     'section' => 'deference_custom_html',
     'settings'   => 'site_header_html',
   )));
@@ -733,7 +739,7 @@ function deference_customize_register($wp_customize) {
     'transport'         => 'postMessage',
   ));
   $wp_customize->add_control(new Magazine_Customize_Textarea_Control($wp_customize, 'site_main_html', array(
-    'label'   => 'Custom Main HTML',
+    'label'   => __('Custom Main HTML', 'deference'),
     'section' => 'deference_custom_html',
     'settings'   => 'site_main_html',
   )));
@@ -745,47 +751,10 @@ function deference_customize_register($wp_customize) {
     'transport'         => 'postMessage',
   ));
   $wp_customize->add_control(new Magazine_Customize_Textarea_Control($wp_customize, 'site_footer_html', array(
-    'label'   => 'Custom Footer HTML',
+    'label'   => __('Custom Footer HTML', 'deference'),
     'section' => 'deference_custom_html',
     'settings'   => 'site_footer_html',
   )));
-
-    // //  =============================
-    // //  = Radio Input               =
-    // //  =============================
-    // $wp_customize->add_setting('themename_theme_options[color_scheme]', array(
-    //     'default'        => 'value2',
-    //     'capability'     => 'edit_theme_options',
-    //     'type'           => 'option',
-    // ));
-//
-    // $wp_customize->add_control('themename_color_scheme', array(
-    //     'label'      => __('Color Scheme', 'themename'),
-    //     'section'    => 'themename_color_scheme',
-    //     'settings'   => 'themename_theme_options[color_scheme]',
-    //     'type'       => 'radio',
-    //     'choices'    => array(
-    //         'value1' => 'Choice 1',
-    //         'value2' => 'Choice 2',
-    //         'value3' => 'Choice 3',
-    //     ),
-    // ));
-//
-    // //  =============================
-    // //  = Page Dropdown             =
-    // //  =============================
-    // $wp_customize->add_setting('themename_theme_options[page_test]', array(
-    //     'capability'     => 'edit_theme_options',
-    //     'type'           => 'option',
-//
-    // ));
-//
-    // $wp_customize->add_control('themename_page_test', array(
-    //     'label'      => __('Page Test', 'themename'),
-    //     'section'    => 'themename_color_scheme',
-    //     'type'    => 'dropdown-pages',
-    //     'settings'   => 'themename_theme_options[page_test]',
-    // ));
 }
 add_action('customize_register', 'deference_customize_register');
 
@@ -815,57 +784,6 @@ function deference_theme_mod_data_attr($name) {
   if (deference_is_theme_customizer()) {
     return " data-theme-mod='$name'";
   }
-}
-
-function deference_get_style() {
-  $current_pairing = get_theme_mod('style', 'modern');
-  $pairings = array(
-    'modern' => array(
-      'google_fonts' => false,
-      'title' => 'Georgia, serif',
-      'body'  => 'Helvetica Neue, Helvetica, Arial, sans-serif',
-      'category_text_transform' => 'normal',
-    ),
-    'elegant' => array(
-      'google_fonts' => true,
-      'title'  => 'Yanone Kaffeesatz',
-      'title_variations' => '700',
-      'body' => 'Vollkorn',
-      'body_variations' => '400,700,400italic,700italic',
-      'category_text_transform' => 'uppercase',
-    ),
-    'techy' => array(
-      'google_fonts' => true,
-      'title' => 'Roboto Slab',
-      'title_variations' => '400,700',
-      'body'  => 'Roboto',
-      'body_variations' => '400,700,400italic,700italic',
-      'category_text_transform' => 'uppercase',
-    ),
-    'retro' => array(
-      'google_fonts' => true,
-      'title' => 'Yanone Kaffeesatz',
-      'title_variations' => '700',
-      'body'  => 'Quattrocento',
-      'body_variations' => '400,700,400italic,700italic',
-      'category_text_transform' => 'uppercase',
-    ),
-    'spartan' => array(
-      'google_fonts' => true,
-      'body'  => 'Vollkorn',
-      'body_variations' => '400,700,400italic,700italic',
-      'title' => 'Lato',
-      'title_variations' => '900',
-      'category_text_transform' => 'uppercase',
-    ),
-    'classic' => array(
-      'google_fonts' => true,
-      'body'  => 'Arvo',
-      'title' => 'PT Sans',
-      'category_text_transform' => 'uppercase',
-    ),
-  );
-  return $pairings[$current_pairing];
 }
 
 ?>

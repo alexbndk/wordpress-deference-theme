@@ -5,17 +5,11 @@
   <?php get_template_part('partials/feature'); ?>
 
   <div class="post-list page-section">
-    <?php
-      // Offset the loop by one (the featured article)
-      global $query_string;
-      $paged = get_query_var('paged') ? get_query_var('paged') : 1;
-      $posts_per_page = (get_query_var('posts_per_page')) ? get_query_var('posts_per_page') : 10;
-      query_posts($query_string.'&offset='.((($paged-1) * $posts_per_page) + 1));
+    <?php while(have_posts()): the_post(); ?>
+      <?php get_template_part('content', 'summary'); ?>
+    <?php endwhile; ?>
 
-      get_template_part('partials/loop');
-
-      wp_reset_query();
-    ?>
+    <?php deference_paging_nav(); ?>
   </div>
 
 <?php else: ?>

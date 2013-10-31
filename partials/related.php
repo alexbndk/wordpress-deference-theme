@@ -1,17 +1,16 @@
-<div class="post-related post-list">
-  <div class="page-section translucent">
-    <?php
-      // Show all posts from the current category
-      $category = get_the_category();
-      $args = array(
-        'posts_per_page' => -1,
-        'cat' => $category[0]->term_id,
-      );
-      query_posts($args);
+<?php
+  // Show all posts from the categories the post belongs to
+  $categories = get_the_category();
+  $related_posts = get_posts(array(
+    'posts_per_page' => -1,
+    'category' => implode(',', array_map(create_function('$o', 'return $o->term_id;'), $categories)),
+  ));
+?>
 
-      get_template_part('partials/loop');
-
-      wp_reset_query();
-    ?>
+<?php if ($related_posts): ?>
+  <div class="post-related post-list page-section translucent">
+    <?php foreach ($related_posts as $post): setup_postdata($post); ?>
+      <?php get_template_part('content', 'summary'); ?>
+    <?php endforeach; ?>
   </div>
-</div>
+<?php endif; ?>

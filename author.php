@@ -13,7 +13,11 @@
   </header>
 
   <div class="post-list page-section">
-    <?php get_template_part('partials/loop'); ?>
+    <?php while(have_posts()): the_post(); ?>
+      <?php get_template_part('content', 'summary'); ?>
+    <?php endwhile; ?>
+
+    <?php deference_paging_nav(); ?>
   </div>
 
 <?php else: ?>
