@@ -90,9 +90,9 @@ function deference_custom_styles() {
     .alt-font,
     h1, h2, h3, h4, h5, h6,
     button,
-    input[type='button'],
-    input[type='reset'],
-    input[type='submit'] {
+    input[type=button],
+    input[type=reset],
+    input[type=submit] {
       font-family: $title_fonts;
     }
 
