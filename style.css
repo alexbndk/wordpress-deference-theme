@@ -136,26 +136,27 @@ h6 {
 
 /* Structure */
 
-#site-bg {
+#site-bg-src {
+  display: none;
+}
+#site-bg-canvas {
   z-index: 1;
   position: fixed;
-  top: -10%;
-  left: -10%;
-  width: 120%;
-  height: 120%;
+  top: -10% !important;
+  left: -10% !important;
+  min-width: 120% !important;
+  min-height: 120% !important;
   opacity: .8;
   -webkit-transform: translate3d(0, 0, 0);
   -moz-transform: translate3d(0, 0, 0);
   -ms-transform: translate3d(0, 0, 0);
   -o-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
-  -webkit-filter: blur(20px) saturate(1.75);
-  -moz-filter: blur(20px) saturate(1.75);
-  -ms-filter: blur(20px) saturate(1.75);
-  -o-filter: blur(20px) saturate(1.75);
-  filter: blur(20px) saturate(1.75);
-  filter: url(css/blur.svg#blur);
-  filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius='20');
+  -webkit-filter: saturate(2);
+  -moz-filter: saturate(2);
+  -ms-filter: saturate(2);
+  -o-filter: saturate(2);
+  filter: saturate(2);
 }
 
 #site-wrapper {

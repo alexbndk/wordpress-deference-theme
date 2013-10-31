@@ -22,7 +22,8 @@
   </div><!-- #site-wrapper -->
 
   <?php if ($background = deference_get_page_background()): ?>
-    <img src="<?php echo $background; ?>" alt="" id="site-bg">
+    <img src="<?php echo $background; ?>" alt="" id="site-bg-src">
+    <canvas id="site-bg-canvas" width="100%" height="100%"></canvas>
   <?php endif; ?>
 
   <?php wp_footer(); ?>
