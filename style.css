@@ -329,6 +329,7 @@ h6 {
   background: rgba(0,0,0,.4);
 }
   .page-header-index {
+    visibility: hidden;
     position: relative;
     width: 100%;
     margin: -30px -15px;
@@ -356,6 +357,9 @@ h6 {
       .page-header-index li.current a {
         color: #fff;
       }
+  .page-header-index.is-processed {
+    visibility: visible;
+  }
   .page-title {
     margin: 0;
     color: rgba(255,255,255,1);
@@ -374,7 +378,7 @@ h6 {
 
 .page-pagination {
   clear: both;
-  margin-top: 30px;
+  margin: 30px 0;
   font-size: 24px;
   font-size: 1.438rem;
   line-height: 1;
@@ -478,6 +482,7 @@ h6 {
 
 .post-list {
   overflow: hidden;
+  padding-bottom: 0;
 }
   .post-list .post-summary {
     float: left;
@@ -1161,14 +1166,6 @@ body .jp-carousel-close-hint > span {
       list-style-type: none;
       margin: 0;
       padding: 0;
-    }
-
-    .widget li {
-      padding: 5px 0;
-    }
-
-    .widget .children li:last-child {
-      padding-bottom: 0;
     }
 
     .widget li > ul,
