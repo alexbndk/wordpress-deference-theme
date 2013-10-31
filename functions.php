@@ -49,6 +49,7 @@ function deference_scripts_styles() {
   if (!get_theme_mod('disable_parallax'))
     wp_enqueue_script( 'jquery-parallaxify', get_template_directory_uri() . '/js/jquery.parallaxify.js', array( 'jquery' ), '0.0.2', true );
   wp_enqueue_script( 'jquery-sonar', get_template_directory_uri() . '/js/jquery.sonar.js', array( 'jquery' ), '', true );
+  wp_enqueue_script( 'stackblur', get_template_directory_uri() . '/js/stackblur.js', array(), '0.5', true );
   wp_enqueue_script( 'deference-script', get_template_directory_uri() . '/js/functions.js', array( 'jquery' ), '1.0', true );
 
   wp_enqueue_style( 'genericons', get_template_directory_uri() . '/fonts/genericons.css', array(), '2.09' );
