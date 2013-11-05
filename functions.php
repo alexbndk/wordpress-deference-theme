@@ -6,7 +6,7 @@ new WPUpdatesThemeUpdater_454('http://wp-updates.com/api/2/theme', basename(get_
 
 // Set content width based on the theme settings
 if (!isset( $content_width))
-  $content_width = get_theme_mod('layout_width', '980') - 60;
+  $content_width = get_theme_mod('layout_width', '1024') - 60;
 
 function deference_setup() {
   /*
@@ -70,7 +70,7 @@ function deference_custom_styles() {
   $category_letter_spacing = get_theme_mod('category_letter_spacing', '0.1em');
   $accent_color = get_theme_mod('accent_color', '#E44B4B');
   $accent_color = (strpos($accent_color, '#') !== false ? $accent_color : "#$accent_color");
-  $layout_width = get_theme_mod('layout_width', '980px');
+  $layout_width = get_theme_mod('layout_width', '1024px');
   $nav_font_size = get_theme_mod('nav_font_size', '24px');
   $post_cover_height = get_theme_mod('post_cover_height', '360px');
 
@@ -544,7 +544,7 @@ function deference_customize_register($wp_customize) {
 
   // Appearance Options
   $wp_customize->add_setting('layout_width', array(
-    'default'        => '980px',
+    'default'        => '1024px',
     'capability'     => 'edit_theme_options',
     'transport'      => 'postMessage',
   ));
